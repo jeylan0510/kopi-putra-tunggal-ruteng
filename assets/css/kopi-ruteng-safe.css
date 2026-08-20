@@ -1,0 +1,154 @@
+/* ================================
+   SOFT COFFEE REFINEMENT
+   (Putih → Coklat Muda)
+================================ */
+
+/* Background konten utama */
+.pc-container {
+  background: #F3ECE7; /* cream kopi muda */
+}
+
+/* Card utama */
+.card {
+  background: #FAF6F3; /* putih hangat */
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(62, 39, 35, 0.12);
+}
+
+/* Judul halaman */
+.card h2,
+.card h3 {
+  color: var(--coffee-dark);
+}
+
+/* Table */
+.table {
+  background: #FAF6F3;
+}
+
+.table thead th {
+  background: #EFE6DF; /* coklat muda header tabel */
+  color: var(--coffee-dark);
+  border-bottom: 2px solid var(--coffee-gold);
+}
+
+.table tbody td {
+  background: #FAF6F3;
+  color: #3E2723;
+}
+
+/* Hover baris tabel */
+.table-hover tbody tr:hover {
+  background-color: #EFE6DF;
+}
+
+/* Button Tambah Produk */
+.btn-success {
+  background: linear-gradient(135deg, #6D4C41, #5D4037);
+  border: none;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #5D4037, #4E342E);
+}
+
+/* Badge status */
+.badge.bg-success {
+  background-color: #6D8B74 !important; /* hijau kopi */
+}
+
+.badge.bg-danger {
+  background-color: #B23A48 !important; /* merah gelap */
+}
+
+/* Area konten padding lebih lega */
+.pc-content {
+  padding: 25px;
+}
+
+/* Modal body ikut cream */
+.modal-content {
+  background: #FAF6F3;
+  border-radius: 14px;
+}
+
+.modal-header {
+  background: #EFE6DF;
+  border-bottom: 1px solid var(--coffee-gold);
+}
+
+.modal-footer {
+  background: #EFE6DF;
+  border-top: 1px solid var(--coffee-gold);
+}
+.modal-title {
+  color: var(--coffee-dark);
+}
+/* Input form */
+.form-control {
+  background: #F3ECE7;
+  border: 1px solid #D7CCC8;
+}
+.form-control:focus {
+  border-color: #A1887F;
+  box-shadow: 0 0 5px rgba(161, 136, 127, 0.5);
+}
+/* Label form */
+.form-label {
+  color: var(--coffee-dark);
+}
+/* ================================
+   END OF KOPI RUTENG SAFE THEME
+================================ */
+
+/* ================================
+   FIX SIDEBAR ADMIN AVATAR
+================================ */
+
+/* Wrapper profil admin di sidebar */
+.sidebar-user-profile {
+  text-align: center;
+}
+
+/* Kartu profil admin */
+.sidebar-user-profile .user-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+}
+
+/* Gambar admin (INI KUNCI) */
+.sidebar-user-profile img {
+  width: 48px;
+  height: 48px;
+  max-width: 48px;
+  max-height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--coffee-gold);
+  background: #FAF6F3;
+}
+
+/* Info teks admin */
+.sidebar-user-profile .user-profile-info h5,
+.sidebar-user-profile strong {
+  font-size: 14px;
+  margin: 0;
+  color: var(--coffee-dark);
+}
+
+.sidebar-user-profile .user-profile-info span,
+.sidebar-user-profile small {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* Hilangkan efek aneh jika ada */
+.sidebar-user-profile img {
+  transform: none !important;
+  box-shadow: none;
+}
+/* ================================
+   END OF FIX SIDEBAR ADMIN AVATAR
+================================ */

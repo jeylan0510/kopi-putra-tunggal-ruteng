@@ -16,6 +16,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/schedules', [HomeController::class, 'schedules'])->name('schedules.search');
 
+// Native API Fallback Routes for Railway Deployment
+Route::any('/api/index.php', function () {
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/api/{endpoint}', function ($endpoint) {
+    if (!isset($_GET['resource'])) {
+        $_GET['resource'] = $endpoint;
+    }
+    require base_path('api/index.php');
+    exit;
+});
+
 // Breeze Auth Routes
 require __DIR__.'/auth.php';
 

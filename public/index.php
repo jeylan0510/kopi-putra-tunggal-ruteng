@@ -1,6 +1,9 @@
 <?php
 
 // Direct API Handler Bypass for Railway Cloud Deployment
+@ini_set('display_errors', '0');
+@error_reporting(0);
+
 $uri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
 
 if (str_contains($uri, '/api') || $uri === '/' || $uri === '' || $uri === '/index.php') {
@@ -11,8 +14,13 @@ if (str_contains($uri, '/api') || $uri === '/' || $uri === '' || $uri === '/inde
             $_GET['resource'] = $endpoint;
         }
     }
-    if (file_exists(__DIR__ . '/api/index.php')) {
-        require_once __DIR__ . '/api/index.php';
+    
+    $apiFile = __DIR__ . '/api/index.php';
+    if (!file_exists($apiFile)) {
+        $apiFile = __DIR__ . '/../api/index.php';
+    }
+    if (file_exists($apiFile)) {
+        require_once $apiFile;
         exit;
     }
 }

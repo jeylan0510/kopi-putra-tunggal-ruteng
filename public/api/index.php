@@ -15,17 +15,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // 1. Connect to Database safely
-@mysqli_report(MYSQLI_REPORT_OFF);
+$conn = null;
+if (class_exists('mysqli')) {
+    @mysqli_report(MYSQLI_REPORT_OFF);
 
-$hostname = getenv('MYSQLHOST') ?: getenv('RAILWAY_TCP_PROXY_DOMAIN') ?: 'localhost';
-$username = getenv('MYSQLUSER') ?: 'root';
-$password = getenv('MYSQLPASSWORD') ?: getenv('MYSQL_ROOT_PASSWORD') ?: 'AEHAKoDgNSjuBuZaVwlQxMLfFSRfRALV';
-$dbname   = getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE') ?: 'railway';
-$port     = (int)(getenv('MYSQLPORT') ?: getenv('RAILWAY_TCP_PROXY_PORT') ?: 3306);
+    $hostname = getenv('MYSQLHOST') ?: getenv('RAILWAY_TCP_PROXY_DOMAIN') ?: 'localhost';
+    $username = getenv('MYSQLUSER') ?: 'root';
+    $password = getenv('MYSQLPASSWORD') ?: getenv('MYSQL_ROOT_PASSWORD') ?: 'AEHAKoDgNSjuBuZaVwlQxMLfFSRfRALV';
+    $dbname   = getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE') ?: 'railway';
+    $port     = (int)(getenv('MYSQLPORT') ?: getenv('RAILWAY_TCP_PROXY_PORT') ?: 3306);
 
-$conn = @new mysqli($hostname, $username, $password, $dbname, $port);
-if (!$conn || $conn->connect_error) {
-    $conn = @new mysqli('localhost', 'root', '', 'kopi');
+    $conn = @new mysqli($hostname, $username, $password, $dbname, $port);
+    if (!$conn || $conn->connect_error) {
+        $conn = @new mysqli('localhost', 'root', '', 'kopi');
+    }
 }
 
 // 2. Parse resource requested

@@ -48,6 +48,8 @@ switch ($resource) {
     case 'produk':
     case 'product':
     case 'products':
+    case 'gitar':
+    case 'gitars':
         $controller = new ProdukController($conn);
         $controller->handleRequest($method, $id);
         break;
@@ -55,11 +57,13 @@ switch ($resource) {
     case 'pelanggan':
     case 'customer':
     case 'customers':
+    case 'users':
         $controller = new PelangganController($conn);
         $controller->handleRequest($method, $id);
         break;
 
     case 'transaksi':
+    case 'transaksis':
     case 'pesanan':
     case 'orders':
         $controller = new TransaksiController($conn);

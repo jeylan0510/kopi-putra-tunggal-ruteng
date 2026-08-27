@@ -54,6 +54,8 @@ class ProdukController {
      * READ ALL Produk
      */
     private function getAll() {
+        $this->ensureTableExists();
+
         $search = isset($_GET['search']) ? mysqli_real_escape_string($this->conn, $_GET['search']) : '';
         $jenis  = isset($_GET['jenis']) ? mysqli_real_escape_string($this->conn, $_GET['jenis']) : '';
 
@@ -69,30 +71,53 @@ class ProdukController {
         if (count($whereClause) > 0) {
             $sql .= " WHERE " . implode(" AND ", $whereClause);
         }
-        $sql .= " ORDER BY id_produk DESC";
+        $sql .= " ORDER BY id_produk ASC";
 
         $result = mysqli_query($this->conn, $sql);
-        if (!$result) {
-            sendResponse(false, 500, "Gagal mengambil data produk: " . mysqli_error($this->conn));
-        }
-
         $produkList = [];
-        while ($row = mysqli_fetch_assoc($result)) {
-            // Format numeric types
-            $row['id_produk'] = (int)$row['id_produk'];
-            $row['stok']      = (int)$row['stok'];
-            $row['harga']     = (float)$row['harga'];
-            $row['berat']     = isset($row['berat']) ? (float)$row['berat'] : 0;
-            $row['status']    = ($row['stok'] > 0) ? "Tersedia" : "Tidak Tersedia";
-            $row['url_foto']  = !empty($row['foto_produk']) ? "assets/images/produk/" . $row['foto_produk'] : null;
-
-            $produkList[] = $row;
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $row['id_produk'] = (int)$row['id_produk'];
+                $row['stok']      = (int)$row['stok'];
+                $row['harga']     = (float)$row['harga'];
+                $row['berat']     = isset($row['berat']) ? (float)$row['berat'] : 0;
+                $row['status']    = ($row['stok'] > 0) ? "Tersedia" : "Tidak Tersedia";
+                $produkList[]     = $row;
+            }
         }
 
-        sendResponse(true, 200, "Data produk berhasil diambil.", [
-            'total' => count($produkList),
-            'items' => $produkList
-        ]);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($produkList, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+
+    private function ensureTableExists() {
+        if (!$this->conn) return;
+        $createSql = "CREATE TABLE IF NOT EXISTS produk_kopi (
+            id_produk INT AUTO_INCREMENT PRIMARY KEY,
+            nama_kopi VARCHAR(100) NOT NULL,
+            jenis_kopi VARCHAR(50) NOT NULL,
+            stok INT NOT NULL DEFAULT 0,
+            harga DOUBLE NOT NULL DEFAULT 0,
+            berat DOUBLE NOT NULL DEFAULT 0,
+            deskripsi TEXT NULL,
+            foto_produk VARCHAR(255) DEFAULT 'default.jpg'
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+        @mysqli_query($this->conn, $createSql);
+
+        $checkEmpty = @mysqli_query($this->conn, "SELECT COUNT(*) as total FROM produk_kopi");
+        if ($checkEmpty) {
+            $row = mysqli_fetch_assoc($checkEmpty);
+            if ((int)($row['total'] ?? 0) === 0) {
+                $seedSql = "INSERT INTO produk_kopi (nama_kopi, jenis_kopi, stok, harga, berat, deskripsi, foto_produk) VALUES
+                ('Kopi Arabika Flores Bajawa', 'Arabika', 15, 75000, 250, 'Kopi Arabika khas Flores Bajawa dengan cita rasa manis karamel dan aroma bunga.', 'default.jpg'),
+                ('Kopi Robusta Ruteng Manggarai', 'Robusta', 20, 50000, 250, 'Kopi Robusta khas Ruteng Manggarai dengan bodi tebal dan rasa cokelat hitam.', 'default.jpg'),
+                ('Kopi Liberika Manggarai', 'Liberika', 10, 85000, 200, 'Kopi Liberika unik dengan aroma buah nangka dan keasaman seimbang.', 'default.jpg'),
+                ('Kopi Toraja Kalosi', 'Arabika', 12, 90000, 250, 'Kopi khas Toraja dengan aroma rempah dan rasa yang kaya.', 'default.jpg'),
+                ('Kopi Gayo Specialty', 'Arabika', 18, 95000, 250, 'Kopi Arabika Gayo Aceh dengan body sedang dan aroma herbal murni.', 'default.jpg');";
+                @mysqli_query($this->conn, $seedSql);
+            }
+        }
     }
 
     /**

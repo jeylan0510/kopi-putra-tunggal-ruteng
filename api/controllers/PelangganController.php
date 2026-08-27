@@ -45,23 +45,48 @@ class PelangganController {
     }
 
     private function getAll() {
-        $sql = "SELECT id_pelanggan, username, email, no_hp, alamat FROM pelanggan ORDER BY id_pelanggan DESC";
+        $this->ensureTableExists();
+
+        $sql = "SELECT id_pelanggan, username, email, no_hp, alamat FROM pelanggan ORDER BY id_pelanggan ASC";
         $result = mysqli_query($this->conn, $sql);
 
-        if (!$result) {
-            sendResponse(false, 500, "Gagal mengambil data pelanggan: " . mysqli_error($this->conn));
-        }
-
         $list = [];
-        while ($row = mysqli_fetch_assoc($result)) {
-            $row['id_pelanggan'] = (int)$row['id_pelanggan'];
-            $list[] = $row;
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $row['id_pelanggan'] = (int)$row['id_pelanggan'];
+                $list[] = $row;
+            }
         }
 
-        sendResponse(true, 200, "Data pelanggan berhasil diambil.", [
-            'total' => count($list),
-            'items' => $list
-        ]);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode($list, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+
+    private function ensureTableExists() {
+        if (!$this->conn) return;
+        $createSql = "CREATE TABLE IF NOT EXISTS pelanggan (
+            id_pelanggan INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) NOT NULL,
+            email VARCHAR(100) NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            no_hp VARCHAR(20) NULL,
+            alamat TEXT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+        @mysqli_query($this->conn, $createSql);
+
+        $checkEmpty = @mysqli_query($this->conn, "SELECT COUNT(*) as total FROM pelanggan");
+        if ($checkEmpty) {
+            $row = mysqli_fetch_assoc($checkEmpty);
+            if ((int)($row['total'] ?? 0) === 0) {
+                $pass = md5('123456');
+                $seedSql = "INSERT INTO pelanggan (username, email, password, no_hp, alamat) VALUES
+                ('jeylan0510', 'jeylan@gmail.com', '$pass', '081234567890', 'Ruteng, Manggarai, NTT'),
+                ('budi_santoso', 'budi@gmail.com', '$pass', '082198765432', 'Jl. Ahmad Yani No. 12, Ruteng'),
+                ('maria_ani', 'maria@gmail.com', '$pass', '085333444555', 'Jl. Motang Rua, Ruteng');";
+                @mysqli_query($this->conn, $seedSql);
+            }
+        }
     }
 
     private function getOne($id) {

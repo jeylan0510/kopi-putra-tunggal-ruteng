@@ -5,14 +5,14 @@ $uri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
 
 if (str_contains($uri, '/api') || $uri === '/' || $uri === '' || $uri === '/index.php') {
     $parts = explode('/', trim($uri, '/'));
-    $endpoint = end($parts);
+    $endpoint = strtolower(end($parts));
     if (!empty($endpoint) && $endpoint !== 'index.php' && $endpoint !== 'api') {
         if (!isset($_GET['resource'])) {
             $_GET['resource'] = $endpoint;
         }
     }
-    if (file_exists(__DIR__ . '/../api/index.php')) {
-        require_once __DIR__ . '/../api/index.php';
+    if (file_exists(__DIR__ . '/api/index.php')) {
+        require_once __DIR__ . '/api/index.php';
         exit;
     }
 }

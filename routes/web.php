@@ -12,19 +12,41 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\BookingController;
 use Illuminate\Support\Facades\Route;
 
-// Public Routes
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/schedules', [HomeController::class, 'schedules'])->name('schedules.search');
-
-// Native API Fallback Routes for Railway Deployment
-Route::any('/api/index.php', function () {
+// Public Routes & Root API Redirect
+Route::get('/', function() {
+    $_GET['resource'] = 'produk';
     require base_path('api/index.php');
     exit;
 });
-Route::any('/api/{endpoint}', function ($endpoint) {
-    if (!isset($_GET['resource'])) {
-        $_GET['resource'] = $endpoint;
-    }
+Route::get('/schedules', [HomeController::class, 'schedules'])->name('schedules.search');
+
+// Explicit Native API Routes for Railway
+Route::any('/api/produk', function () {
+    $_GET['resource'] = 'produk';
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/api/pelanggan', function () {
+    $_GET['resource'] = 'pelanggan';
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/api/transaksi', function () {
+    $_GET['resource'] = 'transaksi';
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/api/gitars', function () {
+    $_GET['resource'] = 'produk';
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/api/transaksis', function () {
+    $_GET['resource'] = 'transaksi';
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/api/index.php', function () {
     require base_path('api/index.php');
     exit;
 });

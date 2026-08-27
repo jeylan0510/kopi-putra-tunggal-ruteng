@@ -13,16 +13,33 @@ Route::get('/user', function (Request $request) {
 Route::apiResource('buses', BusController::class);
 Route::apiResource('routes', RouteController::class);
 
-// Kopi API Routes for Railway Deployment
-Route::any('/index.php', function () {
+// Kopi Explicit API Routes
+Route::any('/produk', function () {
+    $_GET['resource'] = 'produk';
     require base_path('api/index.php');
     exit;
 });
-
-Route::any('/{endpoint}', function ($endpoint) {
-    if (!isset($_GET['resource'])) {
-        $_GET['resource'] = $endpoint;
-    }
+Route::any('/pelanggan', function () {
+    $_GET['resource'] = 'pelanggan';
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/transaksi', function () {
+    $_GET['resource'] = 'transaksi';
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/gitars', function () {
+    $_GET['resource'] = 'produk';
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/transaksis', function () {
+    $_GET['resource'] = 'transaksi';
+    require base_path('api/index.php');
+    exit;
+});
+Route::any('/index.php', function () {
     require base_path('api/index.php');
     exit;
 });
